@@ -61,16 +61,16 @@ tags: Java | 并发编程 | 多线程
 ---
 1. **start**():
  Java API中对于该方法的介绍：
-  使该线程开始执行；Java 虚拟机调用该线程的 `run` 方法。
+    使该线程开始执行；Java 虚拟机调用该线程的 `run` 方法。
     结果是两个线程并发地运行；当前线程（从调用返回给 `start` 方法）和另一个线程（执行其 `run` 方法）。
-  多次启动一个线程是非法的。特别是当线程已经结束执行后，不能再重新启动。
-  **用start方法来启动线程，真正实现了多线程运行，这时无需等待run方法体中的代码执行完毕而直接继续执行后续的代码。**通过调用Thread类的
-  start()方法来**启动一个线程**，这时此线程处于**就绪（可运行）状态，并没有运行**，一旦得到cpu时间片，就开始执行run()方法，这里的run()方法 称为线程体，它包含了要执行的这个线程的内容，Run方法运行结束，此线程随即终止。
+    多次启动一个线程是非法的。特别是当线程已经结束执行后，不能再重新启动。
+    **用start方法来启动线程，真正实现了多线程运行，这时无需等待run方法体中的代码执行完毕而直接继续执行后续的代码。**通过调用Thread类的
+    start()方法来**启动一个线程**，这时此线程处于**就绪（可运行）状态，并没有运行**，一旦得到cpu时间片，就开始执行run()方法，这里的run()方法 称为线程体，它包含了要执行的这个线程的内容，Run方法运行结束，此线程随即终止。
 2. **run**():
  Java API中对该方法的介绍：
     如果该线程是使用独立的 `Runnable` 运行对象构造的，则调用该 `Runnable` 对象的 `run` 方法；否则，该方法不执行任何操作并返回。
-  `  Thread` 的子类应该重写该方法。
-  run()方法只是类的一个普通方法而已，如果直接调用Run方法，程序中依然只有主线程这一个线程，其程序执行路径还是只有一条，还是要顺序执行，还是要等待run方法体执行完毕后才可继续执行下面的代码，这样就没有达到写线程的目的。
+    `  Thread` 的子类应该重写该方法。
+    run()方法只是类的一个普通方法而已，如果直接调用Run方法，程序中依然只有主线程这一个线程，其程序执行路径还是只有一条，还是要顺序执行，还是要等待run方法体执行完毕后才可继续执行下面的代码，这样就没有达到写线程的目的。
  3. 总结：
 
 > run()相当于线程的任务处理逻辑的入口方法，它由Java虚拟机在运行相应线程时直接调用，而不是由应用代码进行调用。
@@ -228,7 +228,7 @@ public class Test {
 
     corePoolSize: 核心线程数
     maximumPoolSize: 能容纳的最大线程数
-    keepAliveTime: 救急线程存活时间
+    keepAliveTime: 救急线程存活时间 (救急线程 = maximumPoolSize - corePoolSize)
     unit 存活时间单位
     workedQueue 阻塞队列(提交但未执行任务的队列)
     threadFactory 创建线程的工厂类 一般是ExectorsdefaultThreadFactory()
@@ -351,3 +351,59 @@ synchronized使用的锁对象是存储在Java对象头里的标记字段里。
 **随着锁的竞争，锁可以从偏向锁升级到轻量级锁，再升级的重量级锁，但是锁的升级是单向的，也就是说只能从低到高升级，不会出现锁的降级**
 
 ---
+
+### 8锁案例
+
+```java
+public class Lock8Demo {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Lock8Demo.class);
+
+     public static void main(String[] args) {
+          Phone phone1 = new Phone();
+          Phone phone2 = new Phone();
+
+          new Thread(()->{
+               phone1.sendEmail();
+          },"a").start();
+          // 暂停 保证a线程先启动
+          try {
+               TimeUnit.SECONDS.sleep(1);
+          } catch (InterruptedException e) {
+               LOGGER.error("异常", e);
+          }
+          new Thread(()->{
+               phone2.sendSMS();
+//               phone.hello();
+          },"b").start();
+     }
+
+
+}
+// 资源类
+class Phone{
+     private static final Logger LOGGER = LoggerFactory.getLogger(Phone.class);
+
+     public static synchronized void sendEmail(){
+          try {
+               TimeUnit.SECONDS.sleep(3);
+          } catch (InterruptedException e) {
+               LOGGER.error("异常", e);
+          }
+          LOGGER.info("======= sendEmail");
+     }
+     public  synchronized void sendSMS(){
+          LOGGER.info("======= sendSMS");
+     }
+
+     public void hello(){
+          LOGGER.info("======= hello");
+     }
+}
+```
+
+> 1. synchronized修饰普通成员方法,锁的是当前对象this,被锁定后其他线程都不能进入到当前对象的其他synchronized方法(对象锁)
+> 2. 普通成员方法和synchronized修饰的成员方法并不构成竞态条件
+> 3. synchronized修饰静态成员方法,锁的是当前类的Class对象(类锁)
+> 4. 对于同步方法块,锁的是synchronized括号中的对象
+> 5. 静态同步方法和普通同步方法因为持有的锁对象不同,不会构成竞态条件
+
