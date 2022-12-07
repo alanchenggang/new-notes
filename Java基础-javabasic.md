@@ -517,7 +517,7 @@ ListIterator 。
 >2. Integer与Integer比较的时候，由于直接赋值的时候会进行自动装箱（ Integer a = 1 或 Integer  a = Integer.valueOf(1) ）,这里需要注意两个问题： 
 >
 >   	① 当整数范围在-128到127之间时，不需要创建新的Integer对象，而是从缓存（IntegerCache）中获取已经创建好的Integer对象。 
->   	  	  	  	
+>   	  	  	  	  	
 >   	②当大于或小于这个范围的时候，就会直接调用new Integer来创建Integer对象。 
 >
 >​       所以Integer a = 128 与 Integer b = Integer.valueOf(128)  都创建了新的Integer对象，用“==”比较会返回false 
@@ -797,3 +797,16 @@ void wait()<br>void wait(long timeout)<br>void wait(long timeout, int nanos)|	�
 
 ---
 
+### Collections
+
+![](https://cscgblog-1301638685.cos.ap-chengdu.myqcloud.com/javabasic/20221207141009.png)
+
+
+
+![image-20221207141347131](https://cscgblog-1301638685.cos.ap-chengdu.myqcloud.com/javabasic/image-20221207141347131.png)
+
+![image-20221207141424284](https://cscgblog-1301638685.cos.ap-chengdu.myqcloud.com/javabasic/image-20221207141424284.png)
+
+![image-20221207141450592](https://cscgblog-1301638685.cos.ap-chengdu.myqcloud.com/javabasic/image-20221207141450592.png)
+
+![image-20221207141516750](https://cscgblog-1301638685.cos.ap-chengdu.myqcloud.com/javabasic/image-20221207141516750.png)

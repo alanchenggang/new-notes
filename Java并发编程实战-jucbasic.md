@@ -407,3 +407,17 @@ class Phone{
 > 4. 对于同步方法块,锁的是synchronized括号中的对象
 > 5. 静态同步方法和普通同步方法因为持有的锁对象不同,不会构成竞态条件
 
+#### 创建线程池
+
+```java
+new ThreadPoolExecutor(
+             CORE-1,
+             CORE+10,
+             60,
+             TimeUnit.SECONDS,
+              new ArrayBlockingQueue<>(50,true),
+             new ThreadFactoryBuilder().setNameFormat("computationally-Intensive-Pool").build(),
+             new ThreadPoolExecutor.AbortPolicy()
+     );
+```
+
