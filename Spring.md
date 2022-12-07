@@ -1,5 +1,11 @@
 **Spring解决循环依赖源码:**
 
+三级缓存:
+
+> - singletonObjects
+> - earlySingletonObjects
+> - singletonFactories
+
 ```java
 	/**
 	 * Return the (raw) singleton object registered under the given name.
