@@ -411,8 +411,8 @@ class Phone{
 
 ```java
 new ThreadPoolExecutor(
-             CORE-1,
-             CORE+10,
+             CORE+1,
+             CORE+2,
              60,
              TimeUnit.SECONDS,
               new ArrayBlockingQueue<>(50,true),
