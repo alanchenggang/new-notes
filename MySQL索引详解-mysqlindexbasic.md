@@ -411,3 +411,6 @@ select ... lock in share mode;
 //对读取的记录加独占锁
 select ... for update;
 ```
+
+### MySQL 主键递增的好处有哪些
+
