@@ -451,3 +451,12 @@ new ThreadPoolExecutor(
 
 
 
+在每一个volatile写操作前面JVM都插入一个StoreStore屏障(禁止之前的普通写与下面的volatile写重排序)
+
+在每一个volatile写操作后面JVM都插入一个StoreLoad屏障(禁止之前的volatile写与下面可能有的volatile读写重排序)
+
+### ThreadLocal最佳实践
+
+>1. ThreadLocal.withInitial(()->初始化值) **使用之前先初始化,避免空指针异常**
+>2. 建议把ThreadLocal修饰为static
+>3. **用完记得手动remove()  **    避免线程池不及时清除导致脏数据复用
