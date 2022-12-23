@@ -460,3 +460,23 @@ new ThreadPoolExecutor(
 >1. ThreadLocal.withInitial(()->初始化值) **使用之前先初始化,避免空指针异常**
 >2. 建议把ThreadLocal修饰为static
 >3. **用完记得手动remove()  **    避免线程池不及时清除导致脏数据复用
+
+---
+
+### 对象内存布局
+
+对象头+实例数据+对齐填充(保证8字节的倍数)
+
+对象头 = 对象标记(Mark Word) + 类元信息(类型指针)
+
+对象标记保存了哈希码/GC标记/GC次数/同步锁标记/偏向锁持有者等信息
+
+### synchronized锁的种类以及锁升级流程
+
+> synchronized用的锁是存在Java对象头里的Mark Word中
+>
+> 锁升级功能主要依赖Mark Word中锁标志位和释放偏向锁标志位
+
+- 偏向锁 *当一段同步代码块一直被同一个线程多次访问,由于只有一个线程那么该线程在后续访问时便会自动获得锁*: MarkWord存储的是偏向的线程ID;(单线程竞争)
+- 轻量锁: MarkWord存储的是指向**线程栈**中Lock Record的指针;
+- 重量锁: MarkWord存储的是指向**堆**中Monitor对象的指针
