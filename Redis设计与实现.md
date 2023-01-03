@@ -896,8 +896,10 @@ Redlock 算法的基本思路，是让客户端和多个独立的 Redis 节点�
 
 ```java
 public void set(key, value) {
-    deleteFromRedis(key);
     putToDb(key, value);
+    deleteFromRedis(key);
+    
+    
     // ... a few seconds later
     deleteFromRedis(key);
 }
